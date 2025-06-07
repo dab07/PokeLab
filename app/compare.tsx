@@ -48,7 +48,13 @@ export default function CompareScreen() {
     };
 
     const selectSecondPokemon = () => {
-        router.push('/');
+        router.push({
+            pathname: '/',
+            params: {
+                selectForCompare: pokemon1,
+                compareMode: 'true'
+            }
+        });
     };
 
     const renderPokemonCard = (pokemon: Pokemon | null, isFirst: boolean) => {
