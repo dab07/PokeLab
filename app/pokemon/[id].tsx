@@ -6,6 +6,7 @@ import { Pokemon, PokemonSpecies } from '../../types/pokemon';
 import { pokemonService } from '../../service/PokemonService';
 import { typeColors } from '../../constant/Colors';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import {calculateTypeEffectiveness} from "@/service/calculateTypeEffectiveness";
 
 const statNames: Record<string, string> = {
     hp: 'HP',
@@ -23,6 +24,8 @@ export default function PokemonDetailScreen() {
     const [description, setDescription] = useState<string>('');
     const [loading, setLoading] = useState(true);
 
+        const pokemonTypes = pokemon?.types.map(t => t.type.name);
+        const effectiveness = calculateTypeEffectiveness(pokemonTypes);
     useEffect(() => {
         if (id) {
             loadPokemonData();
@@ -241,6 +244,69 @@ export default function PokemonDetailScreen() {
                             </View>
                         </View>
                     </View>
+                </View>
+                <View style={styles.effectivenessSection}>
+                    <Text style={styles.effectivenessTitle}>Type Effectiveness</Text>
+
+                    {effectiveness.weakTo.length > 0 && (
+                        <View style={styles.effectivenessRow}>
+                            <Text style={styles.effectivenessLabel}>Weak to:</Text>
+                            <View style={styles.typeChipsContainer}>
+                                {effectiveness.weakTo.map(type => (
+                                    <View
+                                        key={type}
+                                        style={[
+                                            styles.effectivenessChip,
+                                            styles.weaknessChip,
+                                            { backgroundColor: typeColors[type] || '#A8A878' }
+                                        ]}
+                                    >
+                                        <Text style={styles.effectivenessChipText}>{type}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+
+                    {effectiveness.resistantTo.length > 0 && (
+                        <View style={styles.effectivenessRow}>
+                            <Text style={styles.effectivenessLabel}>Resistant to:</Text>
+                            <View style={styles.typeChipsContainer}>
+                                {effectiveness.resistantTo.map(type => (
+                                    <View
+                                        key={type}
+                                        style={[
+                                            styles.effectivenessChip,
+                                            styles.resistanceChip,
+                                            { backgroundColor: typeColors[type] || '#A8A878' }
+                                        ]}
+                                    >
+                                        <Text style={styles.effectivenessChipText}>{type}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+
+                    {effectiveness.immuneTo.length > 0 && (
+                        <View style={styles.effectivenessRow}>
+                            <Text style={styles.effectivenessLabel}>Immune to:</Text>
+                            <View style={styles.typeChipsContainer}>
+                                {effectiveness.immuneTo.map(type => (
+                                    <View
+                                        key={type}
+                                        style={[
+                                            styles.effectivenessChip,
+                                            styles.immunityChip,
+                                            { backgroundColor: typeColors[type] || '#A8A878' }
+                                        ]}
+                                    >
+                                        <Text style={styles.effectivenessChipText}>{type}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    )}
                 </View>
             </ScrollView>
         </View>
@@ -476,5 +542,56 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#1F2937',
+    },
+    effectivenessSection: {
+        width: '100%',
+        marginTop: 16,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: '#E5E7EB',
+    },
+    effectivenessTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#1F2937',
+        marginBottom: 12,
+    },
+    effectivenessRow: {
+        marginBottom: 8,
+    },
+    effectivenessLabel: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#374151',
+        marginBottom: 4,
+    },
+    typeChipsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 4,
+    },
+    effectivenessChip: {
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: 12,
+        opacity: 0.9,
+    },
+    weaknessChip: {
+        borderWidth: 1,
+        borderColor: '#EF4444',
+    },
+    resistanceChip: {
+        borderWidth: 1,
+        borderColor: '#10B981',
+    },
+    immunityChip: {
+        borderWidth: 1,
+        borderColor: '#6B7280',
+    },
+    effectivenessChipText: {
+        color: 'white',
+        fontSize: 11,
+        fontWeight: '600',
+        textTransform: 'capitalize',
     },
 });

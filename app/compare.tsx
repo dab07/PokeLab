@@ -200,7 +200,6 @@ export default function CompareScreen() {
                     </View>
                 </View>
 
-                {/* Add type effectiveness - only render if pokemon is not null */}
                 {renderTypeEffectiveness(pokemon)}
             </View>
         );

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Pokemon } from '../types/pokemon';
 import { typeColors } from '../constant/Colors';
+import {calculateTypeEffectiveness} from "@/service/calculateTypeEffectiveness";
 
 interface PokemonCardProps {
     pokemon: Pokemon;
@@ -25,7 +26,6 @@ export default function PokemonCard({
             onPress();
         }
     };
-
     return (
         <TouchableOpacity
             style={[styles.card, isSelected && styles.selectedCard]}
@@ -70,6 +70,7 @@ export default function PokemonCard({
                     <Text style={styles.statValue}>{pokemon.weight / 10}kg</Text>
                 </View>
             </View>
+
         </TouchableOpacity>
     );
 }
